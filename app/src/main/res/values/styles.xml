@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="MainActivityTheme" parent="android:Theme.DeviceDefault">
+        <!-- Do nothing here -->
+    </style>
+
+</resources>

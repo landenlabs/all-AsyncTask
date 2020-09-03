@@ -1,0 +1,41 @@
+language: android
+sudo: true
+# jdk: oraclejdk8
+
+# os:
+#  - linux
+  
+android:
+  components:
+#    - yes | sdkmanager --licenses && yes | sdkmanager --update
+    - build-tools-28.0.3
+    - android-28
+    - extra
+    - tools
+    - platform-tools
+    - extra-google-m2repository
+    - extra-android-m2repository
+  licenses:
+    # - 'android-sdk-preview-license-.*'
+    # - 'android-sdk-license-.+'
+    # - 'google-gdk-license-.+'
+    - '.+'
+    
+addons:
+  apt_packages:
+    - pandoc
+   
+before_install:
+install:
+  - echo y | sdkmanager "ndk-bundle"
+  - echo y | sdkmanager "ndk;20.1.5948944"
+  - echo y | sdkmanager "cmake;3.6.4111459"
+  - echo y | sdkmanager "cmake;3.10.2.4988404"
+    #  - sdkmanager --update
+before_script:
+  - export ANDROID_NDK_ROOT=$ANDROID_HOME/ndk-bundle
+  - export ANDROID_NDK_HOME=$ANDROID_NDK_ROOT
+
+script:
+    - ./gradlew assembleDebug
+    
