@@ -1,7 +1,14 @@
 <resources>
 
-    <style name="MainActivityTheme" parent="android:Theme.DeviceDefault">
+    <style name="MainActivityTheme1" parent="android:Theme.DeviceDefault">
         <!-- Do nothing here -->
+    </style>
+
+    <style name="MainActivityTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

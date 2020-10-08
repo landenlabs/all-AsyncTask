@@ -3,6 +3,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Do nothing here -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="Test Replacements for AsyncTask"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/withAllAsyncTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:text="AllAsyncTask"
+        android:textAllCaps="false"
+        android:textColor="#208020" />
+
+    <Button
+        android:id="@+id/withRxJava"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/withAllAsyncTask"
+        android:layout_centerHorizontal="true"
+        android:text="RxJava"
+        android:textAllCaps="false"
+        android:textColor="#44f" />
+
+    <Button
+        android:id="@+id/withThread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/withRxJava"
+        android:layout_centerHorizontal="true"
+        android:enabled="false"
+        android:text="Thread"
+        android:textAllCaps="false"
+        android:textColor="#f44" />
+
+    <Button
+        android:id="@+id/withAsyncTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/withThread"
+        android:layout_centerHorizontal="true"
+        android:enabled="false"
+        android:text="AsyncTask"
+        android:textAllCaps="false"
+        android:textColor="#880" />
+
+    <TextView
+        android:layout_above="@+id/github"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
+        android:text="all-AsyncTask - v1.1 Oct-2020
+\nTest various replacements for deprecated AsyncTask"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/github"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:autoLink="web"
+        android:text="https://github.com/landenlabs/all_AsyncTask"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:id="@+id/fragHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="2dp" />
 
 </RelativeLayout>
