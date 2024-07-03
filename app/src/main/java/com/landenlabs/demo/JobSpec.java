@@ -19,7 +19,7 @@
  * @see http://LanDenLabs.com/
  */
 
-package com.landenlabs;
+package com.landenlabs.demo;
 
 public class JobSpec {
     public boolean verbose;

@@ -19,7 +19,7 @@
  * @see http://LanDenLabs.com/
  */
 
-package com.landenlabs;
+package com.landenlabs.demo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -30,17 +30,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.lifecycle.Observer;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.landenlabs.WithRxJava.WorkResult.MSG;
 
 // https://www.vogella.com/tutorials/RxJava/article.html
 // https://stablekernel.com/article/replace-asynctask-and-asynctaskloader-with-rx-observable-rxjava-android-patterns/
@@ -104,19 +100,14 @@ public class WithRxJava
         JobSpec jobSpec = new JobSpec(verboseCb.isChecked(), jobCounterNp.getValue());
 
         int id = view.getId();
-        switch (id) {
-            case R.id.testBtn1:
-                jobSpec.setPeriod(5).setName(" TEST . ");
-                break;
-            case R.id.testBtn2:
-                jobSpec.setPeriod(8).setName( " TEST2 .. ");
-                break;
-            case R.id.testBtn3:
-                jobSpec.setPeriod(10).setName( " TEST3 ... ");
-                break;
-            case R.id.clearBtn:
-                clear();
-                break;
+        if (id == R.id.testBtn1) {
+            jobSpec.setPeriod(5).setName(" TEST . ");
+        } else if (id == R.id.testBtn2) {
+            jobSpec.setPeriod(8).setName(" TEST2 .. ");
+        } else if (id == R.id.testBtn3) {
+            jobSpec.setPeriod(10).setName(" TEST3 ... ");
+        } else if (id == R.id.clearBtn) {
+            clear();
         }
         example(jobSpec);
     }
@@ -172,7 +163,7 @@ public class WithRxJava
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(workResult -> {
-                    if (workResult != null && workResult.action == MSG) {
+                    if (workResult != null && workResult.action == WorkResult.MSG) {
                         printLn(workResult.data.toString());
                     } else {
                         JobSpec params = runParams;
@@ -204,7 +195,7 @@ public class WithRxJava
         }
     }
 
-    static class WorkResult {
+    public static class WorkResult {
         public static final int MSG = 1;
         public static final int DONE = 2;
         public static final int ERROR = 3;

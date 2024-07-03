@@ -99,7 +99,7 @@
             />
 
 
-        <com.landenlabs.NumPicker
+        <com.landenlabs.demo.NumPicker
             android:id="@+id/jobCount"
             android:layout_width="wrap_content"
             android:layout_height="30sp"

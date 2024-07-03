@@ -19,10 +19,11 @@
  * @see http://LanDenLabs.com/
  */
 
-package com.landenlabs;
+package com.landenlabs.demo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.landenlabs.AllAsyncTask;
 
 public class WithAllAsyncTask
         extends androidx.fragment.app.Fragment
@@ -93,19 +96,15 @@ public class WithAllAsyncTask
         JobSpec jobSpec = new JobSpec(verboseCb.isChecked(), jobCounterNp.getValue());
 
         int id = view.getId();
-        switch (id) {
-            case R.id.testBtn1:
-                jobSpec.setPeriod(5).setName(" TEST . ");
-                break;
-            case R.id.testBtn2:
-                jobSpec.setPeriod(8).setName( " TEST2 .. ");
-                break;
-            case R.id.testBtn3:
-                jobSpec.setPeriod(10).setName( " TEST3 ... ");
-                break;
-            case R.id.clearBtn:
-                clear();
-                return;
+        if (id == R.id.testBtn1) {
+            jobSpec.setPeriod(5).setName(" TEST . ");
+        } else if (id == R.id.testBtn2) {
+            jobSpec.setPeriod(8).setName(" TEST2 .. ");
+        } else if (id == R.id.testBtn3) {
+            jobSpec.setPeriod(10).setName(" TEST3 ... ");
+        } else if (id == R.id.clearBtn) {
+            clear();
+            return;
         }
         example(jobSpec);
     }

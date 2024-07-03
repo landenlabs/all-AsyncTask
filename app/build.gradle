@@ -1,24 +1,79 @@
-apply plugin: 'com.android.application'
+// All-AsyncTask
+// module build.gradle
+
+plugins {
+    id ("com.android.application")
+    id ("org.jetbrains.kotlin.android") // Prevents duplicate kotlin warnings
+}
 
 android {
-    compileSdkVersion 33
+    compileSdk  34
+    namespace 'com.landenlabs.demo'
 
     defaultConfig {
         applicationId 'com.landenlabs.allasynctask'
         minSdkVersion 24
-        targetSdkVersion 33
-        versionCode 10203
-        versionName '1.2.3'
+        targetSdkVersion 34
+
+        versionCode 10702
+        versionName '1.7.2'
+
+        // Limit languages to following list.
+        resourceConfigurations += ['en', 'es']
+
+        buildConfigField "long", "BuildTimeMilli", System.currentTimeMillis() + "L"
+    }
+
+    // Save app version in string so resource can be used in layouts
+    applicationVariants.configureEach { variant ->
+        variant.resValue "string", "versionName", "v" + variant.versionName
+    }
+
+    signingConfigs {
+        release
+    }
+
+    // Load signing config (does not work for command line builds)
+    // println("Setting release=${rootDir}/release.properties")
+    if (file("${rootDir}/release.properties").exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(file("${rootDir}/release.properties")))
+        android.signingConfigs.release.storeFile = file(props.keyStore)
+        android.signingConfigs.release.storePassword = props.keyStorePassword
+        android.signingConfigs.release.keyAlias = props.keyAlias
+        android.signingConfigs.release.keyPassword = props.keyAliasPassword
+        println("Setting release to " + signingConfigs.release.storeFile.absolutePath )
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            // Enables code shrinking, obfuscation, and optimization.
+            minifyEnabled true
+
+            // List of resources removed at end of generated mapping file:
+            // grep unused ./app/build/outputs/mapping/demoRelease/resources.txt
+            shrinkResources true
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            ndk {
+                // abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+                abiFilters 'armeabi-v7a', 'arm64-v8a'
+            }
         }
     }
 
-    lintOptions {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile).tap {
+            configureEach {
+                // Enable verbose lint reporting during build.
+                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+            }
+        }
+    }
+
+    lint {
         abortOnError false
         disable 'DefaultLocale', 'SimpleDateFormat', 'InflateParams', 'SpUsage',
                 'UseCompoundDrawables', 'HandlerLeak', 'ViewConstructor', 'SetTextI18n',
@@ -27,27 +82,11 @@ android {
                 'FieldCanBeLocal', 'LocalSuppress', 'HardcodedText', 'Typos',
                 'TypographyFractions','TypographyQuotes', 'SpellCheckingInspection'
     }
-
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            // Enable verbose lint reporting during build.
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
-    // implementation fileTree(include: ['*.jar'], dir: 'libs')
-    // implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-    // implementation 'androidx.annotation:annotation:1.5.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
 
     implementation project(':lib')
 
@@ -56,6 +95,15 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+}
+
+// Rename app
+android.applicationVariants.configureEach { variant ->
+    variant.outputs.configureEach {
+        def ourname = project.parent.name
+        outputFileName = "$ourname-${variant.name}-${variant.versionName}.apk"
+        println "out name= $outputFileName"
+    }
 }

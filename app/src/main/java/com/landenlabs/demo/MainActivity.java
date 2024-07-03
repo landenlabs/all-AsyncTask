@@ -19,7 +19,7 @@
  * @see http://LanDenLabs.com/
  */
 
-package com.landenlabs;
+package com.landenlabs.demo;
 
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +27,8 @@ import android.view.View;
 import androidx.fragment.app.FragmentActivity;
 
 import static androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
+
+import com.landenlabs.demo.R;
 
 
 public class MainActivity extends FragmentActivity
@@ -37,7 +39,7 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(  R.layout.activity_main);
 
         findViewById(R.id.withAllAsyncTask).setOnClickListener(this);
         findViewById(R.id.withRxJava).setOnClickListener(this);
@@ -47,23 +49,20 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id) {
-            case R.id.withAllAsyncTask:
-                WithAllAsyncTask withAllAsyncTask = new WithAllAsyncTask();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragHolder, withAllAsyncTask)
-                        .setTransition(TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case R.id.withRxJava:
-                WithRxJava withRxJava = new WithRxJava();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragHolder, withRxJava)
-                        .setTransition(TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+        if (id == R.id.withAllAsyncTask) {
+            WithAllAsyncTask withAllAsyncTask = new WithAllAsyncTask();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragHolder, withAllAsyncTask)
+                    .setTransition(TRANSIT_FRAGMENT_FADE)
+                    .addToBackStack(null)
+                    .commit();
+        } else if (id == R.id.withRxJava) {
+            WithRxJava withRxJava = new WithRxJava();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragHolder, withRxJava)
+                    .setTransition(TRANSIT_FRAGMENT_FADE)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
