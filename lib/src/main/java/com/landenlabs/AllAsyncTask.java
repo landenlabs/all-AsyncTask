@@ -43,8 +43,8 @@ public class AllAsyncTask<IN, RUN, OUT> implements Runnable {
     static final int MESSAGE_ERROR = -101;
     static final int MESSAGE_STOP = -102;
 
-    private static AtomicInteger count = new AtomicInteger(0);
-    private static Executor executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 8);
+    private static final AtomicInteger count = new AtomicInteger(0);
+    private static final Executor executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 8);
 
     public int id;
     public IN initParams;
@@ -56,7 +56,7 @@ public class AllAsyncTask<IN, RUN, OUT> implements Runnable {
     Function1<Message> msgFunc;
     Function1<AllAsyncTask<IN, RUN, OUT>> finishFunc;
     Function1<AllAsyncTask<IN, RUN, OUT>> errorFunc;
-    private Handler uiHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
+    private final Handler uiHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             if (message.what == MESSAGE_FINISH) {
@@ -165,6 +165,4 @@ public class AllAsyncTask<IN, RUN, OUT> implements Runnable {
     public interface Function1<TT> {
         void apply(TT var1);
     }
-
-
 }
