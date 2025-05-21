@@ -16,7 +16,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang
- * @see http://LanDenLabs.com/
+ * @see https://LanDenLabs.com/
  */
 
 package com.landenlabs.demo;
@@ -36,6 +36,7 @@ public class JobSpec {
         this.period = period;
         return this;
     }
+
     public JobSpec setName(String name) {
         this.name = name;
         return this;

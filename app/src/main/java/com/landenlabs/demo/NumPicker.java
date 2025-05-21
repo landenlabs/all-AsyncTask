@@ -16,7 +16,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang
- * @see http://LanDenLabs.com/
+ * @see https://LanDenLabs.com/
  */
 
 package com.landenlabs.demo;
@@ -27,6 +27,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -67,7 +68,7 @@ public class NumPicker extends LinearLayout {
     public EditText valueText;
     ImageView decrement;
     ImageView increment;
-    private final Handler repeatUpdateHandler = new Handler();
+    private final Handler repeatUpdateHandler = new Handler(Looper.myLooper());
 
     private boolean autoIncrement = false;
     private boolean autoDecrement = false;
@@ -185,7 +186,7 @@ public class NumPicker extends LinearLayout {
             // valueText.setFirstBaselineToTopHeight(0);
         }
         valueText.setLineSpacing(0, 1.0f);
-        valueText.setPadding(0,0,0,0);
+        valueText.setPadding(0, 0, 0, 0);
     }
 
     @SuppressLint("ClickableViewAccessibility")

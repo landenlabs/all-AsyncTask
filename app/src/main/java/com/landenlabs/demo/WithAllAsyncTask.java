@@ -16,23 +16,19 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang
- * @see http://LanDenLabs.com/
+ * @see https://LanDenLabs.com/
  */
 
 package com.landenlabs.demo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.landenlabs.AllAsyncTask;
 
@@ -119,52 +115,52 @@ public class WithAllAsyncTask
         AllAsyncTask<InitParams, JobSpec, WorkResult> bgTask = new AllAsyncTask<>();
 
         bgTask.init(initParams, task -> { // Optional perform initialization work on main thread
-                return true;    // Returning false will skip execution and jump to onError.
-            })
-            .onThread(runParams, task -> { // Do work on background thread
-                long beginWorkNano = System.nanoTime();
-                try {
-                    task.postToMain(task.id + String.format(" deltaMilli=%,d", (beginWorkNano - statNano)/1000));
-                    JobSpec params = task.runParams;
+                    return true;    // Returning false will skip execution and jump to onError.
+                })
+                .onThread(runParams, task -> { // Do work on background thread
+                    long beginWorkNano = System.nanoTime();
+                    try {
+                        task.postToMain(task.id + String.format(" deltaMilli=%,d", (beginWorkNano - statNano) / 1000));
+                        JobSpec params = task.runParams;
 
-                    if (params.verbose)
-                        task.postToMain(task.id + params.name + " Begin sleeping " + params.period + " secs");
-
-                    // Example work to perform on background worker thread.
-                    for (int idx = 0; idx < params.period; idx++) {
-                        Thread.sleep(1000);
                         if (params.verbose)
-                            task.postToMain(task.id + "  " + params.name + " sleeping " + idx);
+                            task.postToMain(task.id + params.name + " Begin sleeping " + params.period + " secs");
+
+                        // Example work to perform on background worker thread.
+                        for (int idx = 0; idx < params.period; idx++) {
+                            Thread.sleep(1000);
+                            if (params.verbose)
+                                task.postToMain(task.id + "  " + params.name + " sleeping " + idx);
+                        }
+                        if (Math.random() < 0.3) {
+                            throw new IllegalStateException("Random failure");
+                        }
+
+                        if (params.verbose)
+                            task.postToMain(task.id + params.name + " Sleep completed");
+
+                    } catch (Exception ex) {
+                        task.postToMain(ex.getMessage());
                     }
-                    if (Math.random() < 0.3) {
-                        throw new IllegalStateException("Random failure");
+
+                    return new WorkResult();    // Return result(Nullable).
+                })
+                .onMessage(msg -> {    // Optionally handle messages on UI thread
+                    printLn(msg.obj.toString());
+                })
+                .onFinish(task -> {    // Optionally handle task finish on UI thread
+                    JobSpec params = task.runParams;
+                    long deltaMilli = (System.nanoTime() - statNano) / 1000;
+                    if (task.outResult != null) {
+                        task.postToMain(task.id + params.name + "[Task done] " + String.format("%,d", deltaMilli));
+                    } else {
+                        task.postToMain(task.id + params.name + "[Task failed] " + String.format("%,d", deltaMilli));
                     }
-
-                    if (params.verbose)
-                        task.postToMain(task.id + params.name + " Sleep completed");
-
-                } catch (Exception ex) {
-                    task.postToMain(ex.getMessage());
-                }
-
-                return new WorkResult();    // Return result(Nullable).
-            })
-            .onMessage(msg -> {    // Optionally handle messages on UI thread
-                printLn(msg.obj.toString());
-            })
-            .onFinish(task -> {    // Optionally handle task finish on UI thread
-                JobSpec params = task.runParams;
-                long deltaMilli = (System.nanoTime() - statNano)/1000;
-                if (task.outResult != null) {
-                    task.postToMain(task.id + params.name + "[Task done] " + String.format("%,d", deltaMilli));
-                } else {
-                    task.postToMain(task.id + params.name + "[Task failed] " + String.format("%,d", deltaMilli));
-                }
-            })
-            .onError(task -> {     // Optionally handle task exception on UI thread
-                task.postToMain(task.id + " Task failed " + task.error.getMessage());
-            })
-            .start()    // Start task, required to get things going.
+                })
+                .onError(task -> {     // Optionally handle task exception on UI thread
+                    task.postToMain(task.id + " Task failed " + task.error.getMessage());
+                })
+                .start()    // Start task, required to get things going.
         ;
     }
 

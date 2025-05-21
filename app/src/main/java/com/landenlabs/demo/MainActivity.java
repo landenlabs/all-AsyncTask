@@ -16,19 +16,17 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang
- * @see http://LanDenLabs.com/
+ * @see https://LanDenLabs.com/
  */
 
 package com.landenlabs.demo;
+
+import static androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.fragment.app.FragmentActivity;
-
-import static androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
-
-import com.landenlabs.demo.R;
 
 
 public class MainActivity extends FragmentActivity
@@ -39,7 +37,7 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(  R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         findViewById(R.id.withAllAsyncTask).setOnClickListener(this);
         findViewById(R.id.withRxJava).setOnClickListener(this);

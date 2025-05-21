@@ -3,7 +3,7 @@
 
 plugins {
     id ("com.android.application")
-    id ("org.jetbrains.kotlin.android") // Prevents duplicate kotlin warnings
+    // id ("org.jetbrains.kotlin.android") // Prevents duplicate kotlin warnings
 }
 
 android {
@@ -44,6 +44,8 @@ android {
         android.signingConfigs.release.keyPassword = props.keyAliasPassword
         println("Setting release to " + signingConfigs.release.storeFile.absolutePath )
     }
+
+    buildFeatures.buildConfig = true
 
     buildTypes {
         release {
@@ -95,6 +97,7 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:core:1.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

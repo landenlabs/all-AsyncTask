@@ -16,7 +16,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang
- * @see http://LanDenLabs.com/
+ * @see https://LanDenLabs.com/
  */
 
 package com.landenlabs.demo;
@@ -120,64 +120,65 @@ public class WithRxJava
         InitParams initParams = new InitParams();
 
         Disposable disposable =
-        Observable.create(new ObservableOnSubscribe<WorkResult>() {
-            // Similar to doInbackground of AsyncTask
-            @Override public void subscribe(ObservableEmitter<WorkResult> emitter) throws Exception {
-                if(!emitter.isDisposed()) {
-                    WorkResult workResult;
-                    // Do some work.
-                    try {
-                        long beginWorkNano = System.nanoTime();
-                        workResult = new WorkResult(WorkResult.MSG,
-                                Thread.currentThread().getId() + String.format(" deltaMilli=%,d", (beginWorkNano - statNano)/1000));
-                        emitter.onNext(workResult);
+                Observable.create(new ObservableOnSubscribe<WorkResult>() {
+                            // Similar to doInbackground of AsyncTask
+                            @Override
+                            public void subscribe(ObservableEmitter<WorkResult> emitter) throws Exception {
+                                if (!emitter.isDisposed()) {
+                                    WorkResult workResult;
+                                    // Do some work.
+                                    try {
+                                        long beginWorkNano = System.nanoTime();
+                                        workResult = new WorkResult(WorkResult.MSG,
+                                                Thread.currentThread().getId() + String.format(" deltaMilli=%,d", (beginWorkNano - statNano) / 1000));
+                                        emitter.onNext(workResult);
 
-                        JobSpec params = runParams;
-                        if (params.verbose) {
-                            workResult = new WorkResult(WorkResult.MSG,
-                                    Thread.currentThread().getId() + params.name + " Begin sleeping " + params.period + " secs");
-                            emitter.onNext(workResult);
-                        }
+                                        JobSpec params = runParams;
+                                        if (params.verbose) {
+                                            workResult = new WorkResult(WorkResult.MSG,
+                                                    Thread.currentThread().getId() + params.name + " Begin sleeping " + params.period + " secs");
+                                            emitter.onNext(workResult);
+                                        }
 
-                        // Example work to perform on background worker thread.
-                        for (int idx = 0; idx < params.period; idx++) {
-                            Thread.sleep(1000);
-                            if (params.verbose) {
-                                workResult = new WorkResult(WorkResult.MSG, Thread.currentThread().getId() + "  " + params.name + " sleeping " + idx);
-                                emitter.onNext(workResult);
+                                        // Example work to perform on background worker thread.
+                                        for (int idx = 0; idx < params.period; idx++) {
+                                            Thread.sleep(1000);
+                                            if (params.verbose) {
+                                                workResult = new WorkResult(WorkResult.MSG, Thread.currentThread().getId() + "  " + params.name + " sleeping " + idx);
+                                                emitter.onNext(workResult);
+                                            }
+                                        }
+                                        if (Math.random() < 0.3) {
+                                            throw new IllegalStateException("Random failure");
+                                        }
+
+                                        workResult = new WorkResult(WorkResult.DONE, Thread.currentThread().getId() + params.name + " Sleep completed");
+                                        emitter.onNext(workResult);
+                                    } catch (Exception ex) {
+                                        emitter.onError(ex);
+                                    }
+
+                                    emitter.onComplete();
+                                }
                             }
-                        }
-                        if (Math.random() < 0.3) {
-                            throw new IllegalStateException("Random failure");
-                        }
-
-                        workResult = new WorkResult(WorkResult.DONE, Thread.currentThread().getId() + params.name + " Sleep completed");
-                        emitter.onNext(workResult);
-                    } catch (Exception ex) {
-                        emitter.onError(ex);
-                    }
-
-                    emitter.onComplete();
-                }
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(workResult -> {
-                    if (workResult != null && workResult.action == WorkResult.MSG) {
-                        printLn(workResult.data.toString());
-                    } else {
-                        JobSpec params = runParams;
-                        long deltaMilli = (System.nanoTime() - statNano)/1000;
-                        if (workResult != null) {
-                            printLn( params.name + "[Task done] " + String.format("%,d", deltaMilli));
-                        } else {
-                            printLn( params.name + "[Task failed] " + String.format("%,d", deltaMilli));
-                        }
-                    }
-                }, throwable -> {
-                    // log(throwable);
-                    printLn(" Task failed " + throwable.getMessage());
-                });
+                        }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(workResult -> {
+                            if (workResult != null && workResult.action == WorkResult.MSG) {
+                                printLn(workResult.data.toString());
+                            } else {
+                                JobSpec params = runParams;
+                                long deltaMilli = (System.nanoTime() - statNano) / 1000;
+                                if (workResult != null) {
+                                    printLn(params.name + "[Task done] " + String.format("%,d", deltaMilli));
+                                } else {
+                                    printLn(params.name + "[Task failed] " + String.format("%,d", deltaMilli));
+                                }
+                            }
+                        }, throwable -> {
+                            // log(throwable);
+                            printLn(" Task failed " + throwable.getMessage());
+                        });
     }
 
     static class InitParams {
@@ -202,6 +203,7 @@ public class WithRxJava
 
         public final int action;
         public final Object data;
+
         public WorkResult(int action, Object data) {
             this.action = action;
             this.data = data;
